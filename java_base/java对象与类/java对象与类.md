@@ -6,6 +6,8 @@
 * 封装
 * final实例域
 * 工厂方法
+* 方法参数
+* 对象构造
 
 1.类之间的关系
 
@@ -82,3 +84,140 @@ Date类有一个**更改器方法**setTime,可以设置毫秒值.
 * 使用NumberFormat类不利用构造器完成的原因
   + 无法命名构造器。构造器名与累名一致，但是有两个不同的实例。
   + 使用构造器时，无法改变所构造的对象类型。而Factory方法将返回一个DecimalFormat类对象，这是NumberFormat的子类.
+
+7.方法参数
+
+* java中一个方法可以修改**传递引用**所对应的变量值，而不能修改**传递值**调用所对应的变量值。
+>
+	publicstatic void tripleValue(double x)//doesn't work
+	{
+		x = 3*x;
+	}
+>
+* java程序总是采用按值调用。方法得到的是参数的一个拷贝，方法不能修改传递给它的任何参数变量的内容。
+
+User对象类
+>
+	public class User {  
+    private String name;  
+    private int age;  
+    public User(String name, int age) {  
+        this.name=name;  
+        this.age=age;  
+    	}  
+    public String getName() {  
+        return name;  
+    	}  
+    public void setName(String name) {  
+        this.name = name;  
+    	}  
+    public int getAge() {  
+        return age;  
+    	}  
+    public void setAge(int age) {  
+        this.age = age;  
+    	}  
+	}  
+>
+
+
+执行类:
+>  
+	/** 
+ 	* java中的按值调用  
+ 	*/  
+	public class CallByValue {  
+    private static User user=null;  
+    private static User stu=null;    
+    /** 
+     * 交换两个对象 
+     * @param x 
+     * @param y 
+     */  
+    public static void swap(User x,User y){  
+        User temp =x;  
+        x=y;  
+        y=temp;  
+    }    
+    public static void main(String[] args) {  
+        user = new User("user",26);  
+        stu = new User("stu",18);  
+        System.out.println("调用前user的值："+user.toString());  
+        System.out.println("调用前stu的值："+stu.toString());  
+        swap(user,stu);  
+        System.out.println("调用后user的值："+user.toString());  
+        System.out.println("调用后stu的值："+stu.toString());  
+    	}  
+	}  
+
+
+结果为:
+
+>
+	调用前user的值：User [name=user, age=26]
+	调用前stu的值：User [name=stu, age=18]
+	调用后user的值：User [name=user, age=26]
+	调用后stu的值：User [name=stu, age=18]
+
+
+我们发现user和stu的值并没有发生变化，也就是方法并没有改变存储在变量user和stu中的对象引用。swap方法的参数x和y被初始化为两个对象引用的拷贝，这个方法交换的是这两个拷贝的值而已.
+
+
+* java中方法参数的使用情况：
+ + 一个方法不能修改一个基本数据类型的参数(即数值或布尔值)
+ + 一个方法可以改变一个对象参数的状态
+ + 一个方法不能让对象参数引用一个新的对象
+
+8.对象构造
+
+* 方法的签名: 要完整地描述一个方法，需要指出方法名以及参数类型
+  + **返回类型不是方法签名的一部分**。不能有名字相同，参数类型相同，返回类型却不同的方法
+* 调用另一个构造器
+ +  this(...)
+ >
+ 	publc Employee(double s)
+ 	{
+  		//call Enployee(String ,double)
+  		this("Employee #"+nextId,s);//调用另一个构造器
+  		nerxtId++; 
+ 	}
+
+* 初始化快
+
+>
+	public class User {
+	private static int nextId;
+
+    private  int id;  
+    private String name;  
+    private int age;  
+	//初始化块
+    {
+       id = nextId;
+       nextId++;
+    }
+    public User(String name, int age) {  
+        this.name=name;  
+        this.age=age;  
+    	}  
+    public String getName() {  
+        return name;  
+    	}  
+    public void setName(String name) {  
+        this.name = name;  
+    	}  
+    public int getAge() {  
+        return age;  
+    	}  
+    public void setAge(int age) {  
+        this.age = age;  
+    	}  
+	}  
+
+
+* 程序首先运行初始化块，然后才运行构造器的主体部分
+* 即使在类后面定义，仍可以在初始化快中设置域
+* 对于只需要初始化一次的代码块，可以使用静态代码块 static{}.
+
+
+参考 ： 《java核心技术卷I》
