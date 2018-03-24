@@ -10,10 +10,10 @@
 * Tomcat的体系结构
 * 参考链接
 
-##Tomcat的下载和安装
+## Tomcat的下载和安装
 * [Tomcat官网](http://tomcat.apache.org/)
 * 安装:下载加压即可.
-##Tomcat目录层次结构
+## Tomcat目录层次结构
 * bin : 存放启动和关闭Tomcat的脚本文件
 * conf : 存放Tomcat服务器的各种配置文件
 * lib : 存放Tomcat服务器支撑的jar包
