@@ -52,7 +52,7 @@
 
 5.线程状态
 
-![线程状态图](./threadStatus.png)
+![线程状态图](./threadStatus.PNG)
 
 6.线程安全问题
 
