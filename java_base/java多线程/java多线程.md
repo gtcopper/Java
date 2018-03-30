@@ -8,6 +8,7 @@
 * 线程安全问题
 * 等待唤醒机制
 * 多生产多消费问题
+* 多线程细节
 
 
 
@@ -103,3 +104,118 @@
 
 JDK1.5后解决方案
 
+	java.util.concurrent.locks--Lock接口解决
+	lock() :获取锁  unlock()释放锁
+	将旧锁替换成新锁，锁上的监视器方法(Object中的wait,notify,notifyAll)替换成新的监视器方法
+	JDK1.5将原有监视器方法封装到了Condition对象中.
+	方法对应 : await,singal.singalAll
+
+
+	//定义锁对象
+	private Lock lock = new ReentrantLock(); 
+	//获取锁上的Condition对象
+	private Condition con = lock.newCondition();
+	
+	//public static final Object obj = new Object();
+	
+	public  void setName(String name){
+		//获取锁
+		lock.lock();
+		try
+		{
+		while(flag)//if改为while判断，必须多判断标记，否侧出线线程问题
+		{
+			try {
+				con.await();//当前线程等待
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		this.name = name+code;
+		code++;
+		System.out.println(Thread.currentThread().getName()+"...生产了..."+this.name);
+		flag = true;
+		con.signalAll();//唤醒所有线程，防止出现死锁
+		}
+		//释放锁
+		finally
+		{
+			lock.unlock();//防止异常导致锁无法释放
+		}
+	}
+
+* 解决效率问题
+  + 只有一个锁
+  + 在一个锁上加多个监视器对象(Condition),唤醒对方线程,减少资源的消耗
+
+>
+		
+	//定义锁对象
+		private Lock lock = new ReentrantLock(); 
+		//获取锁上的Condition对象
+		private Condition pro = lock.newCondition();//负责生产
+		//为了解决唤醒对方线程问题,需在一个锁上装两个监视器对象,提高效率
+		private Condition con = lock.newCondition();//负责消费
+		
+		
+		//public static final Object obj = new Object();
+		
+		public  void setName(String name){
+			//获取锁
+			lock.lock();
+			try
+			{
+			while(flag)//if改为while判断，必须多判断标记，否侧出线线程问题
+			{
+				try {
+					pro.await();//生产者线程等待
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			this.name = name+code;
+			code++;
+			System.out.println(Thread.currentThread().getName()+"...生产了..."+this.name);
+			flag = true;
+			//消费者唤醒一个
+			con.signal();
+			//con.signalAll();//唤醒所有线程，防止出现死锁
+			}
+			//释放锁
+			finally
+			{
+				lock.unlock();//防止异常导致锁无法释放
+			}
+	}
+
+
+10.多线程细节
+
+* 在同步中拥有执行权，不一定会执行，必须要拥有友锁
+>
+	synchronized(obj)
+	{	
+		wait();//0,1,2
+		codes...
+	}
+	synchronized(obj)
+	{
+		notifyAll();//3
+		codes....
+		//不会产生线程问题,执行3线程时，虽然唤醒了所有线程，其他线程处于临时阻塞状态，虽然又有cpu执行权，但是没有锁obj,无法执行线程任务，直到3线程代码执行完，释放锁，其他线程才执行.
+	}	
+
+>
+	
+ 	
+
+
+* wait()和sleep()方法的异同点:
+ + 相同 ： 都可以使线程处于冻结状态
+ + 不同点 : 
+         + 1. sleep必须指定时间,wait可以指定也可以不指定时间.
+         + 2. sleep时间到，线程会处于临时阻塞或运行状态,wait如果没有指定时间，必须使用，notify()或notifyAll()唤醒.
+         + 3. sleep不一定要定义在同步中，wait必须定义再同步中.
+         + 4. 都定义再同步中 线程执行到sleep，不会释放锁(sleep肯定会醒)。线程执行到wait，会释放锁.
