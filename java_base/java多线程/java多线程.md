@@ -48,7 +48,7 @@
 * 多线程执行时，在栈内存中，每一个线程都有自己所属的栈内存空间,进行方法的压栈和出栈.
 * 当执行线程的任务结束了，线程自动在栈内存中释放(包括主线程main).当所有的执行线程都结束了，进程结束.
 * Thread.currentThread()获取到当前线程.
-* main方法线程名为main,其他线程名为:Thread-n(n为整型).
+* main方法线程名为main,其他线程默认名为:Thread-n(n为整型).可以通过Thread构造函数，传递线程任务的同时，指定线程名称.
 * main线程出异常结束的是main线程,其他线程不影响(其他线程出异常同理).
 * 多次启动同一线程是非法的.
 * 多线程任务中通常有循环结构，弥补单线程只能处理一个问题的缺陷.
@@ -209,9 +209,6 @@ JDK1.5后解决方案
 
 >
 	
- 	
-
-
 * wait()和sleep()方法的异同点:
  + 相同 ： 都可以使线程处于冻结状态
  + 不同点 : 
@@ -219,3 +216,72 @@ JDK1.5后解决方案
          + 2. sleep时间到，线程会处于临时阻塞或运行状态,wait如果没有指定时间，必须使用，notify()或notifyAll()唤醒.
          + 3. sleep不一定要定义在同步中，wait必须定义再同步中.
          + 4. 都定义再同步中 线程执行到sleep，不会释放锁(sleep肯定会醒)。线程执行到wait，会释放锁.
+
+* 如何中断线程 :
+ + 使用Object类的interrupt,将线程的冻结状态解除，让线程恢复到运行状态(重新具备cpu执行资格),还将收到一个InterruptedException异常,需要在catch中捕获异常，在异常处理中改变标记，让循环结束，以达到中断线程的效果
+
+* 守护线程
+ + 后台线程，一般创建的为前台线程.
+ + 前台与后台运行时没有区别，结束时有区别 ：
+ + 前台线程run方法结束进程结束,后台线程run方法结束结束，或者没有其他前台线程，jvm会自动关闭
+ + 方法 ： thread(指定线程).setDaemon()
+
+* 线程的优先级
+ + 用数字表示  1-10(数字越大优先级越高)
+ + 默认初始优先级是5
+ + 方法 setPriority(Thread.MAX_PRIORITY)//设置最大优先级为10,最小为1
+* 线程组
+  + ThreadGroup,可以在Thread的构造函数中指定线程组
+  + 可以对多个同组的线程进行统一操作，默认都属于main线程
+
+* join&yield
+ + join() : 等待该线程结束.
+ + main线程执行到某一线程的join方法时，会释放执行权,处于临时冻结状态，将执行权切换给其他存活的线程，**切换是随机的**，并不一定切换到那个调用join方法的线程,当指定的线程结束时，主线程才继续执行.
+ + yield()  : static方法,临时暂停线程,将执行权释放,让其他线程能获得执行权.
+ 
+* Thread的匿名内部类
+>
+ 	new Thread(
+     new Runnable(){
+			public void run(){
+			System.out.println("runnable run");
+		}}
+	 ){
+			public void run()
+			{
+				System.out.println("subThread run");//打印这个
+			}
+	}.start();
+	
+
+
+
+>
+	public class Thread
+	{
+		private Runnable r;
+		Thread(Runnable r)
+		{
+			this.r = r;
+		}
+		public void run()
+		{
+			if(r!=null)
+			r.run();
+		}
+		public void start()
+		{
+			run();
+		}
+	}
+
+	Public class SubThread extends Thread
+	{
+		//重写了父类Thread的run方法,导致Runnable中的run方法不执行
+		public void run()
+		{
+			System.out.println("subThread run");
+		}
+	}
+>
+* Thread对象的实现子类，覆盖了Thread类的run方法,覆盖了用Runnable线程任务的方法,故打印的是Thread子类的run方法信息.
