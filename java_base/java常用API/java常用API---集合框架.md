@@ -3,6 +3,7 @@
 * Collection接口
 * List接口
 * Set接口
+* Map接口
 
 
 
@@ -38,3 +39,27 @@
   + TreeSet : 结果按自然顺序排列,使用的是二叉树结构，通过比较方法(CompareTo)判断是否是重复元素
   + 需要覆盖hashCode,equals,同时实现Comparable接口,建立自然排序,还可以复写toString()方法.
   + LinkedHashSet : HashSet的子类，能保证效率和有序(即按存入顺序取出)
+
+### Map接口
+
+* 内部存储 键Key 值value
+* 键只能对应一个值(键的唯一性)
+* keySet方法获取所有的键(key的集合).
+* entrySet方法返回的是键值对(映射关系),类型为Map.Entry.
+* map集合没有迭代器,map集合也不能被foreach遍历.
+>
+	for(Map.Entry<String,String> e : map.entrySet())//通过增强Set集合实现
+		{
+			String key = e.getKey();
+			String value = e.getValue();
+			System.out.println(key + " = " + value);
+		}
+
+* values方法返回所有键的值，类型为Collection<?>,值不需要保证唯一性.
+* Map子类 ：
+ + Hashtable : 数据结构 ： 哈希表 ，存入的键值必须是非null, 线程是同步的
+     + Properties : 属性集，键和值都是字符串 ,可以结合流进行数据操作.
+ + HashMap : 数据结构 ： 哈希表 , 存入的键值可以为空 ,线程是不同步的.
+     + LinkedHashMap :  数据结构 ： 基于链表(有序)+哈希表(存入与取出顺序一致)
+ + TreeMap(红黑树) :   数据结构 ： 二叉树，线程是非同步的,可进行排序.
+ 
