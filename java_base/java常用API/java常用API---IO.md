@@ -25,7 +25,7 @@
 `` FileOutputStream out = new FileOutputStream(file,true);//第二个参数，是否续写``
 
 * BufferedOutputStream 输出字节流缓冲区 ,构造函数接收一个输出字节流,内部通过数组实现缓冲.
-
+* **write方法只将整数的最低位写入.**
 ###InputStream
 * 所有输入字节流的超类
 
@@ -73,3 +73,32 @@
 
 
 * BufferedWriter 输出字符流缓冲区 ，构造函数接收一个输出字符流,内部通过数组实现缓冲.
+
+### Properties集合与IO流
+* Properties的load方法,将流中的数据添加到集合(Properties集合对象中).
+* 输出集合数据使用store(字符/字节流，comments(属性描述)).
+
+### SequenceInputStrean
+* 合并输入流对象，构造函数接收**枚举类型的输入流对象**或两个输入流对象
+
+### ObjectOutputStream
+* 可以序列化持久化对象,即可以直接往设备上写入对象数据文件扩展名为.object.
+* 对象需要实现Serializable接口(标记接口),启动类的序列化功能,给每个需要序列化的类分配一个序列版本号.
+* 静态数据不会被序列化
+* 非静态数据不想序列化，可以通过关键字transient修饰.
+
+### ObjectInputStream
+* 对象的反序列化
+
+### PrintStream
+* 将数据原封不动写到指定目的地中，使用其特有方法print();//可以写入各种数据值,将数据转成字符串再写入---write(String.valueOf());//实现
+### DataOutputStream
+* 将java基本数据类型写入流中
+### ByteArrayOutputStream
+* 字节数组输出流，在内存中操作，不产生IOException,不用关闭流资源，关闭操作是无效的,没有调用系统资源.
+* 内部存在自增长数组.
+
+### RandomAccessFile
+* 随机读取文件和写入文件
+* 内部封装了byte[]字节数组，对数据存入数组后，再对数组进行操作，实现随机读写.
+* getPointer()；//获取指针位置，seek();//设置指针位置
