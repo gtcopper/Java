@@ -4,7 +4,7 @@ public class ArrayTest1 {
 
     public static void main(String[] args) {
         //自定义数组构造函数初始化数组
-        Array arr = new Array(20);
+        Array<Integer> arr = new Array<Integer>(20);
         for (int i = 0; i < 10; i++) {
             //在数组尾部添加数据元素
             arr.addLast(i);
@@ -34,6 +34,9 @@ public class ArrayTest1 {
         System.out.println(arr);
         System.out.println(arr.findAll(100));
         arr.removeAllElement(100);
+        System.out.println(arr);
+        arr.remove(2);
+        arr.remove(3);
         System.out.println(arr);
     }
 

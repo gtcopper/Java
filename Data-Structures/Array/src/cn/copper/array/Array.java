@@ -67,12 +67,11 @@ public class Array<E> {
      * @param e
      */
     public void add(int index,E e){
-
-        if(size == data.length)
-            throw new IllegalArgumentException("Add last failed.Arr is full");
         if(index < 0 || index > size){
             throw new IllegalArgumentException("Add last failed.Arr bound is failed");
         }
+        if(size == data.length)
+            resize(2 * data.length);
         for(int i = size-1; i>=index;i--){
             data[i+1] = data[i];
         }
@@ -152,6 +151,10 @@ public class Array<E> {
             data[i-1] = data[i];
         }
         size--;
+        data[size] = null;//便于垃圾回收,处理闲逛对象 loitering Object
+        if(size == data.length / 4 && data.length / 2 != 0){
+            resize(data.length / 2);
+        }
         return data[index];
     }
     /**
@@ -211,5 +214,17 @@ public class Array<E> {
         }
         res.append(']');
         return res.toString();
+    }
+    /**
+     *扩容,实现动态数组
+     * @param newCapacity
+     * @return
+     */
+    private void resize(int newCapacity){
+        E[] newData = (E[])new Object[newCapacity];
+        for (int i = 0; i < size; i++) {
+            newData[i] = data[i];
+        }
+        data = newData;
     }
 }
