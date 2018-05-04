@@ -49,19 +49,19 @@ public class LinkedList<E> {
             Node prev = dummyHead;
             for (int i = 0; i < index; i++) {
                 prev = prev.next;
-                if (prev==null){
-                    prev = new Node();
-                }
+//                if (prev==null){
+//                    prev = new Node();
+//                }
             }
 //            Node node = new Node(e);
 //            node.next = prev.next ;
 //            prev.next = node;
-            if (prev.next != null){
-                prev.next.e = e;
-            }else {
+//            if (prev.next != null){
+//                prev.next.e = e;
+//            }else {
                 prev.next = new Node(e, prev.next);
                 size++;
-            }
+//            }
         }
     //向链表头部添加元素
     public void addFirst(E e){
