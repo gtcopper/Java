@@ -8,6 +8,7 @@
   * 有序性
 
 ###Java内存模型
+* [Java内存模型](https://www.hollischuang.com/archives/2550)
 
 ### Java锁
 ##### 公平锁与非公平锁
