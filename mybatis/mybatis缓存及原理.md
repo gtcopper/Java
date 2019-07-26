@@ -43,8 +43,8 @@
   * 要使用二级缓存除了上面一个配置外，我们还需要在我们每个DAO对应的Mapper.xml文件中定义需要使用的cache。
   ```
 	<mapper namespace="...UserMapper">
-    <cache/><!-- 加上该句即可，使用默认配置、还有另外一种方式，在后面写出 -->
-</mapper>
+    	<cache/><!-- 加上该句即可，使用默认配置、还有另外一种方式，在后面写出 -->
+	</mapper>
   ```
   * 具体可以看org.apache.ibatis.executor.CachingExecutor类的以下实现 
 其中使用的cache就是我们在对应的Mapper.xml中定义的cache。
