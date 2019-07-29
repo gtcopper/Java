@@ -40,3 +40,10 @@
 * 初始化
 ### 虚拟机类加载器
 * 双亲委派模型
+
+### 线上FullGC排查
+[线上FullGC排查](https://blog.csdn.net/wilsonpeng3/article/details/70064336)
+
+
+### 常见面试题
+[JVM常见面试题](https://my.oschina.net/demons99/blog/1936827)
